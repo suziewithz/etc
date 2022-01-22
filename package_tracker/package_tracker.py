@@ -1,4 +1,5 @@
 import sys
+import webbrowser
 
 track_num = str(sys.argv[1])
 
@@ -26,11 +27,14 @@ def get_website(track_num):
 
     if len(track_num) == 12 or len(track_num) == 15:
         return get_website_for_fedex(track_num)
-	return
 
-website = get_website(track_num)
+    raise Exception(track_num + ' is not a valid tracking number')
 
-if sys.stdout.isatty():
-    print(website)
-else:
-    sys.stdout.write(website)
+try:
+    website = get_website(track_num)
+    webbrowser.open_new_tab(website)
+except Exception as e:
+    if sys.stdout.isatty():
+        print(e.message)
+    else:
+        sys.stdout.write(e.message)
